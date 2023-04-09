@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
 	if (bind(sockfd, (struct sockaddr *) &my_addr, sizeof(struct sockaddr)) == -1) {           //bind socket
-		printf("error in binding");
+		printf("error in binding\n");
 		exit(1);
 	}
 	printf("start receiving\n");

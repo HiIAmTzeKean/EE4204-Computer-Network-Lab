@@ -19,12 +19,12 @@ int main(int argc, char **argv)
 	FILE *fp;
 
 	if (argc != 2) {
-		printf("parameters not match");
+		printf("parameters not match\n");
 	}
-
+    printf("file name: %s\n", argv[2]);
 	sh = gethostbyname(argv[1]);	                                       //get host's information
 	if (sh == NULL) {
-		printf("error when gethostby name");
+		printf("error when gethostby name\n");
 		exit(0);
 	}
 

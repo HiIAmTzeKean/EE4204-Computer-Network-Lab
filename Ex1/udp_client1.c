@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
 	printf("canonical name: %s\n", sh->h_name);
 	for (pptr=sh->h_aliases; *pptr != NULL; pptr++)
 		printf("the aliases name is: %s\n", *pptr);			//printf socket information
-	switch(sh->h_addrtype)
+    
+    switch(sh->h_addrtype)
 	{
 		case AF_INET:
 			printf("AF_INET\n");
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
 	ser_addr.sin_port = htons(MYUDP_PORT);
 	memcpy(&(ser_addr.sin_addr.s_addr), *addrs, sizeof(struct in_addr));
 	bzero(&(ser_addr.sin_zero), 8);
+
 
 	str_cli1(stdin, sockfd, (struct sockaddr *)&ser_addr, sizeof(struct sockaddr_in), &len);   // receive and send
 
