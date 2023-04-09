@@ -1,0 +1,7 @@
+Fixed size ack
+./udp_ser4 0 500
+./udp_client4 127.0.0.1 myfile.txt 0 500
+
+Vary size ack
+./udp_ser4 1 500
+./udp_client4 127.0.0.1 myfile.txt 1 500
