@@ -63,7 +63,7 @@ void sendAck(int sockfd, struct sockaddr *addr, int addr_len) {
         printf("ERROR send error!\n");								
         exit(1);
     }
-    printf("INFO: sending ACK to client\n");	
+    // printf("INFO: sending ACK to client\n");	
 }
 
 void str_ser(int sockfd, struct sockaddr *addr, int addr_len)
@@ -114,7 +114,7 @@ void str_fixed(int sockfd, struct sockaddr *addr, int addr_len)
 {
     char buf[BUFSIZE];
 	char recvString[DATALEN];
-	int n = 0, end = 0, count=0;
+	int n = 0, end = 0, count=0, packet_count=0, ack_received=0;
     long currentLine = 0;
     FILE *fp;
 
@@ -127,7 +127,7 @@ void str_fixed(int sockfd, struct sockaddr *addr, int addr_len)
 			exit(1);
 		}
 
-        printf("INFO: receiving a frame!\n");
+        printf("LOG: receiving %d packet!\n", ++packet_count);
         count++;
         // check if EOF
         // if EOF then remove the last char
@@ -144,6 +144,7 @@ void str_fixed(int sockfd, struct sockaddr *addr, int addr_len)
         // reset counter
         if (count==2){
             sendAck(sockfd,addr,addr_len);
+            printf("LOG: ACK %d sent!\n", ++ack_received);
             count=0;
         }
 	}
@@ -163,7 +164,7 @@ void str_vary(int sockfd, struct sockaddr *addr, int addr_len)
 {
     char buf[BUFSIZE];
 	char recvString[DATALEN];
-	int n = 0, end = 0, count=0, innerCount=1;
+	int n = 0, end = 0, count=0, innerCount=1, packet_count=0, ack_received=0;
     long currentLine = 0;
     FILE *fp;
 
@@ -176,7 +177,7 @@ void str_vary(int sockfd, struct sockaddr *addr, int addr_len)
 			exit(1);
 		}
 
-        printf("INFO: receiving a frame!\n");
+        printf("LOG: receiving %d packet!\n", ++packet_count);
         count++;
         // check if EOF
         // if EOF then remove the last char
@@ -193,6 +194,7 @@ void str_vary(int sockfd, struct sockaddr *addr, int addr_len)
         if (count==innerCount) {
             //receive the ack
             sendAck(sockfd,addr,addr_len);
+            printf("LOG: ACK %d sent!\n", ++ack_received);
             count=0;
             // reset the inner count
             if (++innerCount==4) {

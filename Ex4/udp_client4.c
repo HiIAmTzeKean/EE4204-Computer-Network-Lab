@@ -108,7 +108,7 @@ long getFileSize(FILE *fp) {
 void receiveAck(int sockfd, struct sockaddr *addr, int addrlen) {
     struct ack_so ack;
     
-    printf("INFO: Waiting for ACK by server\n");
+    // printf("LOG: Waiting for ACK by server\n");
 
 	if (recvfrom(sockfd,&ack,2, 0,addr,(socklen_t *)&addrlen) == -1) {
 		printf("error when receiving\n");
@@ -150,7 +150,7 @@ long sendMessage(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int
 long sendFixed(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int addrlen) {
     long currentLine = 0;
     int sendLength;
-    int n, count=0;
+    int n, count=0, packet_count=0, ack_received=0;
 
     char frame[DATALEN];
 
@@ -166,7 +166,7 @@ long sendFixed(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int a
 			printf("ERROR: send error!\n"); //send the data
 			exit(1);
 		}
-        printf("LOG: frame sent!\n");
+        printf("LOG: packet %d sent!\n", ++packet_count);
         count++;
         
 		currentLine += sendLength;
@@ -174,6 +174,7 @@ long sendFixed(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int a
         if (count==2) {
             //receive the ack
             receiveAck(sockfd,addr,addrlen);
+            printf("LOG: ACK %d Received!\n", ++ack_received);
             count=0;
         }
 	}
@@ -183,7 +184,7 @@ long sendFixed(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int a
 long sendVary(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int addrlen) {
     long currentLine = 0;
     int sendLength;
-    int n, count=0, innerCount=1;
+    int n, count=0, innerCount=1, packet_count=0, ack_received=0;
 
     char frame[DATALEN];
 
@@ -199,7 +200,7 @@ long sendVary(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int ad
 			printf("ERROR: send error!\n"); //send the data
 			exit(1);
 		}
-        printf("LOG: frame sent!\n");
+        printf("LOG: packet %d sent!\n", ++packet_count);
         count++;
         
 		currentLine += sendLength;
@@ -207,6 +208,7 @@ long sendVary(int fileSize, char *buf, int sockfd, struct sockaddr *addr, int ad
         if (count==innerCount) {
             //receive the ack
             receiveAck(sockfd,addr,addrlen);
+            printf("LOG: ACK %d Received!\n", ++ack_received);
             count=0;
             if (++innerCount==4) {
                 innerCount=1;
